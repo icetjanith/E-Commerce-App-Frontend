@@ -1,0 +1,163 @@
+<div class="sidebar">
+    <ul class="mt-3">
+        <div class="sideBarItems">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            Dashboard
+        </div>
+        <div class="sideBarItems" (click)="btnAddItems()">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            Add Item
+        </div>
+        <div class="sideBarItems" (click)="addSuppliersFunction()">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            Add Supplier
+        </div>
+        <div class="sideBarItems">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            View Orders
+        </div>
+        <div class="sideBarItems">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            Customers
+        </div>
+        <div class="sideBarItems">
+            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
+            Suppliers
+        </div>
+    </ul>
+</div>
+<div class="main-Content">
+    <div class="searchRow row d-flex justify-content-center mt-2 mb-3 ms-1">
+        <form class="d-flex" role="search">
+            <input class="searchBox form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="chartRow row g-3 ms-2">
+        <div class="sells col-lg-6 col-md-12 col-sm-12">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #addItems>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Items</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="itemName" class="form-label">Item Name</label>
+                    <input type="text" class="form-control" id="itemName" [(ngModel)]="item.itemName" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="itemImage" class="form-label">Item Image</label>
+                    <input type="text" class="form-control" id="itemImage" [(ngModel)]="item.itemImage" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="itemDescription" class="form-label">Item Description</label>
+                    <input type="text" class="form-control" id="itemDescription" [(ngModel)]="item.itemDescription" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="itemPrice" class="form-label">Item Price</label>
+                    <input type="number" class="form-control" id="itemPrice" [(ngModel)]="item.itemPrice" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="itemQuantity" class="form-label">Item Quantity</label>
+                    <input type="number" class="form-control" id="itemQuantity" [(ngModel)]="item.itemQuantity" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="itemCategory" class="form-label">Item Category</label>
+                    <select id="itemCategory" class="form-select" [(ngModel)]="item.itemCategory">
+                        <option value="asus">Asus</option>
+                        <option value="msi">MSI</option>
+                        <option value="hp">Hp</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="itemCode" class="form-label">Item Code</label>
+                    <input type="text" class="form-control" id="itemCode" [(ngModel)]="item.itemCode" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="supplierId" class="form-label">Supplier Id</label>
+                    <input type="text" class="form-control" id="supplierId" [(ngModel)]="item.supplierId" placeholder="">
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="submitItemForm()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #addSuppliers>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Supplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="supplier.supplierName" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput2" class="form-label">Email</label>
+                    <input type="email" class="form-control" [(ngModel)]="supplier.supplierEmail" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput3" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" [(ngModel)]="supplier.supplierPhone" placeholder="">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput4" class="form-label">Company Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="supplier.supplierCompany" placeholder="">
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="submitSupplierForm()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #updateItem>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #confirmDelete>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

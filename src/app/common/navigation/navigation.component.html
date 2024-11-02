@@ -1,0 +1,170 @@
+<nav class="navBarFull navbar navbar-expand-lg bg-body-secondary">
+    <div class="container-fluid">
+        <a class="navbar-brand ms-lg-5 fw-bolder">Sellex</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarNav">
+            <ul class="navBar navbar-nav">
+                <li routerLink="" class="nav-item mx-3 d-flex justify-content-center">
+                    <a class="nav-link" aria-current="page">Home</a>
+                </li>
+                <li routerLink="/all-items" class="nav-item mx-3 d-flex justify-content-center">
+                    <a class="nav-link">ALL Products</a>
+                </li>
+                <li routerLink="/cart" class="nav-item mx-3 d-flex justify-content-center">
+                    <a class="nav-link">Cart</a>
+                </li>
+                <li class="nav-item mx-3 d-flex justify-content-center">
+                    <a class="nav-link">Contact Us</a>
+                </li>
+                <li class="nav-item mx-3 d-flex justify-content-center">
+                    <a class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showAvatar">
+                    <div class="avatar" (click)="showAvatarPopOver()">
+                        J
+                    </div>
+                </li>
+                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showSignInButtons">
+                    <button class="btn btn-primary" (click)="showSignIn()">Login</button>
+                </li>
+                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showSignInButtons">
+                    <button class="btn btn-primary" (click)="showSignUp()">SignUp</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="modal" tabindex="-1" #signInModal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">Sign In</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-outline mb-4 text-center">
+                    <input type="email" id="signIn_Email" class="form-control" placeholder="Email Address"
+                        [(ngModel)]="signIn.email" />
+                </div>
+                <div class="form-outline mb-4 text-center">
+                    <input type="email" id="signIn_Password" class="form-control" placeholder="Password"
+                        [(ngModel)]="signIn.password" />
+                </div>
+                <div class="row mb-4">
+                    <div class="col d-flex justify-content-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                            <label class="form-check-label" for="form2Example31"> Remember me </label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <a href="#!" class="text-decoration-none" (click)="forgotPassword()">Forgot password?</a>
+                    </div>
+                    <div class="form-outline mb-4 text-center">
+                        <button type="button" class="btn btn-primary mt-4" (click)="btnSignIn()">Sign in</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #forgotPassWordModal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Forgot Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #signUpModal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sign Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                    <input type="email" id="signIn_Email" class="form-control" placeholder="Full Name"
+                        [(ngModel)]="signUp.fullName" />
+                    <label for="floatingInput">Full Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        [(ngModel)]="signUp.email">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        [(ngModel)]="signUp.password">
+                    <label for="floatingInput">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                        [(ngModel)]="signUp.userType">
+                        <option selected>Select user type</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                    <label for="floatingSelect">Select user type</label>
+                </div>
+                <div class="form-floating mb-3" *ngIf=" signUp.userType=='admin' ">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        [(ngModel)]="signUp.phoneNumber">
+                    <label for="floatingInput">Admin Id</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        [(ngModel)]="signUp.phoneNumber">
+                    <label for="floatingInput">PhoneNumber</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                        [(ngModel)]="signUp.city">
+                    <label for="floatingInput">City</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="btnSignUp()">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<span class="loader" #spinner></span>
+
+<div *ngIf="loading" class="loading-overlay">
+    
+</div>
+
+<div class="avatarPopOver" *ngIf="avatar_pop_over">
+    <div class="items">
+        {{signUp.fullName}}
+    </div>
+    <div class="items" (click)="goToDashboard()">
+        Dashboard
+    </div>
+    <div class="items">
+        SignOut
+    </div>
+</div>
+
