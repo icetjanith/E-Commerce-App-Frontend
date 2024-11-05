@@ -13,37 +13,84 @@ import { NavigationserviceService } from '../../navigationservice.service';
 })
 export class CartComponent implements OnInit {
 
-  constructor(private cartsService:CartService, private navigationService:NavigationserviceService){}
+  constructor(private cartsService: CartService, private navigationService: NavigationserviceService) { }
 
-  cart:any[]=[];
+  cart: any[] = [];
+  orderDetailArray: any[] = []
 
-  emptyCartImg:boolean=true;
+  emptyCartImg: boolean = true;
 
-  totalValue:number=0.00;
+  totalValue: number = 0.00;
 
   ngOnInit(): void {
-    this.cart=this.cartsService.getCartItems();
+    this.cart = this.cartsService.getCartItems();
     console.log(this.cart);
     this.loadCartItems();
     this.setTotalValue();
   }
 
-  loadCartItems(){
-    if(this.cart.length!==0){
-      this.emptyCartImg=false;
+  loadCartItems() {
+    if (this.cart.length !== 0) {
+      this.emptyCartImg = false;
     }
   }
 
-  setTotalValue(){
-    if(this.cart.length!==0){
-      this.cart.forEach(cartItem=>{
-        this.totalValue+=cartItem.itemQuantity*cartItem.itemPrice;
+  setTotalValue() {
+    if (this.cart.length !== 0) {
+      this.cart.forEach(cartItem => {
+        this.totalValue += cartItem.itemQuantity * cartItem.itemPrice;
       });
     }
   }
 
-  btnCheckOut(){
-    
+  orderDetails: any = {
+    itemCode: '',
+    itemQty: ''
+  }
+
+  order: any = {
+    customerId: '',
+    orderDetailsList: this.orderDetailArray
+  }
+
+  addOrderDteais() {
+    this.cart.forEach(cartItem => {
+      const newOrder = {
+        itemCode: cartItem.itemCode,
+        itemQty: cartItem.itemQuantity
+      }
+      this.orderDetailArray.push(newOrder);
+    });
+    this.order.customerId=this.navigationService.customerId;
+  }
+
+  async saveOrder(){
+    try {
+      let response=await fetch("http://localhost:8080/order/api/v1/save",{
+        method: "Post",
+        body: JSON.stringify(this.order),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      let data=await response.json();
+      alert('ok')
+    } catch (error) {
+      console.log(error);
+    }finally{
+
+    }
+  }
+
+  btnCheckOut() {
+    if (this.navigationService.avatarImg) {
+      alert('valid');
+      this.addOrderDteais();
+      console.log(this.order);
+      this.saveOrder();
+    } else {
+      alert('not valid');
+    }
   }
 
 

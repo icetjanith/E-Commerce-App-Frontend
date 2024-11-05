@@ -4,12 +4,14 @@
   position: fixed;
   width: 100%;
   z-index: 10;
+  
 }
 
 .navBar {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
+  color: white;
 }
 
 .navBar li{

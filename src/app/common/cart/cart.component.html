@@ -10,7 +10,7 @@
                     <img src="img/emptyCart.png" alt="" srcset="" class="img-fluid">
                 </div>
 
-                <div class="cart_section bg-body-tertiary" id="cart_section">
+                <div class="cart_section bg-body-tertiary" id="cart_section" *ngIf="!emptyCartImg">
 
                     <div class="cart_item mb-2" *ngFor="let cartItem of cart">
                         <div class="image">
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="checkout_button" id="checkout_button">
-                    <button class="btn fw-bold" style="color: white; background-color:#FF7C08;">Checkout</button>
+                    <button class="btn fw-bold" style="color: white; background-color: #007FFF;;" (click)="btnCheckOut()">Checkout</button>
                 </div>
 
             </div>

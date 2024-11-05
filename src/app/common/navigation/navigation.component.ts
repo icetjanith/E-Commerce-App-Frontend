@@ -1,9 +1,10 @@
 import { NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
+import { NavigationserviceService } from '../../navigationservice.service';
 
 @Component({
   selector: 'app-navigation',
@@ -13,9 +14,13 @@ import { Router } from '@angular/router';
   styleUrl: './navigation.component.css'
 })
 
-export class NavigationComponent implements AfterViewInit {
+export class NavigationComponent implements AfterViewInit, OnInit {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private navigation:NavigationserviceService) {}
+
+  ngOnInit(): void {
+    
+  }
 
   @ViewChild("signInModal") signInElement!: ElementRef;
   private signInModal!: Modal;
@@ -68,6 +73,8 @@ export class NavigationComponent implements AfterViewInit {
     this.forgotPasswordModal.show();
   }
 
+  firstLetter!:String;
+
   async btnSignUp() {
     console.log("signup");
     this.signUpModal.hide();
@@ -86,9 +93,13 @@ export class NavigationComponent implements AfterViewInit {
       let data = await response.json();
 
       console.log(data);
+      this.signUp=data;
+      this.firstLetter=data.fullName.split("",1);
+      console.log(this.firstLetter);
       this.showSignInButtons = false;
       this.showAvatar = true;
-
+      this.navigation.avatarImg=true;
+      this.navigation.customerId=data.userId;
     } catch(error) {
       console.log(error);
     } finally {
@@ -118,9 +129,12 @@ export class NavigationComponent implements AfterViewInit {
 
       console.log(data);
       this.signUp=data;
+      this.firstLetter=data.fullName.split("",1);
+      console.log(this.firstLetter)
       this.showSignInButtons = false;
       this.showAvatar = true;
-
+      this.navigation.avatarImg=true;
+      this.navigation.customerId=data.userId;
     } catch(error) {
       console.log(error);
     } finally {

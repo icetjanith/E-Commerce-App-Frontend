@@ -6,9 +6,8 @@ import { NavigationComponent } from './common/navigation/navigation.component';
 })
 export class NavigationserviceService {
 
-  constructor(private navigation:NavigationComponent) { }
+  constructor() { }
 
-  public checkAvatarExists(){
-    return this.navigation.showAvatar;
-  }
+  public avatarImg:boolean=false;
+  public customerId='';
 }
