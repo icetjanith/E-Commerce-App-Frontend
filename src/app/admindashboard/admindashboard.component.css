@@ -6,7 +6,7 @@
     top: 54px;
     height: 100vh;
     background-color: #007FFF;
-    width: 15rem;
+    max-width:15rem;
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -22,12 +22,19 @@
     cursor: pointer;
 }
 
+.sideBarItems img{
+  width: 15%;
+}
+
+.sideBarItems:hover{
+  font-size: large;
+}
+
 .main-Content {
     left: 15rem;
     right: 0rem;
     top: 54px;
     position: absolute;
-    background-color: #f8f9fa;
     width: calc(100% - 15.05rem);
     background-color: #F0F8FF;
     min-height: 100vh;
@@ -196,6 +203,71 @@
     font-style: normal;
     display: flex;
   }
+
+  .detailsDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+hr{
+    margin-top: -3px;
+    margin-bottom: 5px;
+    width: 70%;
+    color: black;
+    border: 3px solid black;
+}
+
+.detailsRow{
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    width: 90%;
+    margin-top: 8px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+}
+
+.label{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-right: 12px;
+    min-width: 5rem;
+}
+
+.buttonRow{
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.btnClear{
+  margin-left: 20px;
+  color: white;
+  background-color: #00ff00;
+  width: 6rem;
+  max-height: 2.5rem;
+  border: 1px solid #00ff00;
+  border-radius: 7px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}
+
+.btnRegister{
+  margin-right: 9px;
+  color: white;
+  background-color: #ff0000;
+  width: 6rem;
+  height: 2.5rem;
+  border: 1px solid #ff0000;
+  border-radius: 7px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}
   
 
 @media screen and (max-width: 992px) {
@@ -205,7 +277,7 @@
         top: 54px;
         height: 100vh;
         background-color: blue;
-        width: 10rem;
+        width: 5rem;
         color: #ffffff;
         display: flex;
         flex-direction: column;
@@ -224,13 +296,17 @@
         cursor: pointer;
     }
 
+    .sideBarItems img{
+      width: 70%;
+    }
+
     .main-Content {
-        left: 10rem;
+        left: 5rem;
         right: 0;
         top: 54px;
         position: absolute;
         background-color: #f8f9fa;
-        width: calc(100% - 10.75rem);
+        width: calc(100% - 5.0rem);
     }
 
     @media screen and (max-width: 768px) {
@@ -240,7 +316,7 @@
             top: 54px;
             height: 100vh;
             background-color: blue;
-            width: 8rem;
+            width: 5rem;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -259,12 +335,12 @@
         }
     
         .main-Content {
-            left: 8rem;
+            left: 5rem;
             right: 0;
             top: 54px;
             position: absolute;
             background-color: #f8f9fa;
-            width: calc(100% - 8.75rem);
+            width: calc(100% - 5rem);
         }
     }
 }

@@ -4,7 +4,10 @@ import { FormControl, FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
+import { Toast } from 'bootstrap';
 import { NavigationserviceService } from '../../navigationservice.service';
+import { UserService } from '../../user/user.service';
+
 
 @Component({
   selector: 'app-navigation',
@@ -16,11 +19,7 @@ import { NavigationserviceService } from '../../navigationservice.service';
 
 export class NavigationComponent implements AfterViewInit, OnInit {
 
-  constructor(private router: Router,private navigation:NavigationserviceService) {}
-
-  ngOnInit(): void {
-    
-  }
+  constructor(private router: Router,private navigation:NavigationserviceService, private user_service:UserService) {}
 
   @ViewChild("signInModal") signInElement!: ElementRef;
   private signInModal!: Modal;
@@ -31,7 +30,30 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   @ViewChild("signUpModal") signUpElement!: ElementRef;
   private signUpModal!: Modal;
 
+  @ViewChild('deleteToast') deleteToast!:ElementRef;
+  private deleteToastObject!:Toast;
+
+  @ViewChild('resetPassword') resetPassword!:ElementRef;
+  private resetPasswordModal!:Modal;
+
   @ViewChild("spinner") spinnerElement!: ElementRef;
+
+  ngAfterViewInit(): void {
+    this.signInModal = new Modal(this.signInElement.nativeElement);
+    this.signUpModal = new Modal(this.signUpElement.nativeElement);
+    this.deleteToastObject = new Toast(this.deleteToast.nativeElement);
+    if (this.deleteToast && this.deleteToast.nativeElement) {
+      this.deleteToastObject = new Toast(this.deleteToast.nativeElement);
+    } else {
+      console.error('deleteToast element is not available');
+    }
+    this.forgotPasswordModal=new Modal(this.forgotPasswordElement.nativeElement);
+    this.resetPasswordModal=new Modal(this.resetPassword.nativeElement);
+  }
+
+  ngOnInit(): void {
+    this.checkUserLogin();
+  }
 
   loading = false;
   public showAvatar = false;
@@ -51,12 +73,16 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     email: "",
     password: ""
   };
- 
 
-  ngAfterViewInit(): void {
-    this.signInModal = new Modal(this.signInElement.nativeElement);
-    this.forgotPasswordModal = new Modal(this.forgotPasswordElement.nativeElement);
-    this.signUpModal = new Modal(this.signUpElement.nativeElement);
+  toastImg!:string;
+  toastMsg!:string;
+
+  checkUserLogin(){
+    const savedLogin = localStorage.getItem('login');
+    if(savedLogin){
+      this.signIn=JSON.parse(savedLogin);
+      this.loginCheck();
+    }
   }
 
   showSignIn() {
@@ -100,6 +126,10 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       this.showAvatar = true;
       this.navigation.avatarImg=true;
       this.navigation.customerId=data.userId;
+      this.signIn=data;
+      console.log(this.signIn);
+      localStorage.setItem('login',JSON.stringify(this.signIn));
+      this.user_service.userObject=data;
     } catch(error) {
       console.log(error);
     } finally {
@@ -110,13 +140,12 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   }
 
 
-  async btnSignIn() {
+  async loginCheck(){
     console.log("signin");
-    this.signInModal.hide();
+    // this.signInModal.hide();
     this.loading = true;
-    this.spinnerElement.nativeElement.style.display = 'inline';
+    // this.spinnerElement.nativeElement.style.display = 'flex';
     try {
-
       let response = await fetch("http://localhost:8080/users/api/v1/sign-in", {
         method: "Post",
         body: JSON.stringify(this.signIn),
@@ -135,6 +164,61 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       this.showAvatar = true;
       this.navigation.avatarImg=true;
       this.navigation.customerId=data.userId;
+      this.signIn=data;
+      console.log(this.signIn);
+      localStorage.setItem('login',JSON.stringify(this.signIn));
+      this.user_service.userObject=data;
+    } catch(error) {
+      console.log(error);
+    } finally {
+      this.loading = false;
+      this.spinnerElement.nativeElement.style.display = 'none';
+    }
+  }
+
+  signOut(){
+    localStorage.removeItem('login');
+    this.showAvatar=false;
+    this.showSignInButtons=true;
+    this.avatar_pop_over=false;
+  }
+
+  async btnSignIn() {
+    console.log("signin");
+    this.signInModal.hide();
+    this.loading = true;
+    this.spinnerElement.nativeElement.style.display = 'inline';
+    try {
+
+      let response = await fetch("http://localhost:8080/users/api/v1/sign-in", {
+        method: "Post",
+        body: JSON.stringify(this.signIn),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if(!response.ok){
+        this.toastImg="fas fa-exclamation-triangle";
+        this.toastMsg="Your email or password incorrect !";
+        this.deleteToastObject.show();
+        return;
+      }
+
+      let data = await response.json();
+
+      console.log(data);
+      this.signUp=data;
+      this.firstLetter=data.fullName.split("",1);
+      console.log(this.firstLetter);
+      this.showSignInButtons = false;
+      this.showAvatar = true;
+      this.navigation.avatarImg=true;
+      this.navigation.customerId=data.userId;
+      this.signIn=data;
+      console.log(this.signIn);
+      localStorage.setItem('login',JSON.stringify(this.signIn));
+      this.user_service.userObject=data;
     } catch(error) {
       console.log(error);
     } finally {
@@ -160,4 +244,91 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       this.router.navigate(['/user-dashboard',userId]);
     }
   }
+
+  otp:boolean=false;
+
+  forgotPasswordEmail!:string;
+
+  otpNumber!:number;
+
+  async otpBtn(){
+    this.otp=true;
+    try {
+      let response=await fetch(`http://localhost:8080/users/api/v1/authenticate/${this.forgotPasswordEmail}`);
+    } catch (error) {
+      
+    }
+  }
+
+  authObject:any={
+    email:'',
+    otpNumber:''
+  }
+
+  clickModel(){
+    this.signInModal.hide();
+    this.forgotPasswordModal.show();
+  }
+
+  async nextBtn(){
+    this.authObject.email=this.forgotPasswordEmail;
+    try {
+      let response=await fetch("http://localhost:8080/users/api/v1/otp",{
+        method: "POST",
+        body: JSON.stringify(this.authObject),
+        headers: {
+          "Content-Type": "application/json"
+        }  
+      });
+      if(response.ok){
+        this.forgotPasswordModal.hide();
+        this.resetPasswordModal.show();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public newPassword!:string;
+  public confirmPassword!:string;
+
+  resetObj:any={
+    email:"",
+    password:""
+  }
+
+  checkNewPassword(){
+    if(this.newPassword.match(this.confirmPassword)){
+      alert('ok');
+      this.resetObj.email=this.forgotPasswordEmail;
+      this.resetObj.password=this.newPassword;
+    }else{
+      return;
+    }
+  }
+
+  async resetBtn(){
+    this.checkNewPassword();
+    alert('working')
+    try {
+      let response=await fetch("http://localhost:8080/users/api/v1/reset-password",{
+        method:"PUT",
+        body: JSON.stringify(this.resetObj),
+        headers: {
+          "Content-Type": "application/json"
+        }  
+      });
+
+    } catch (error) {
+      
+    }
+  }
+
+  navModel:boolean=false;
+
+  btnNav(){
+    this.navModel=!this.navModel;
+  }
+
+
 }

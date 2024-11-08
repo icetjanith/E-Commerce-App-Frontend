@@ -1,41 +1,49 @@
-<nav class="navBarFull navbar navbar-expand-lg bg-secondary-subtle">
-    <div class="container-fluid">
-        <a class="navbar-brand ms-5" href="#">
-            <img src="img/200.jpg" alt="Bootstrap" width="30" height="24">
-          </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarNav">
-            <ul class="navBar navbar-nav">
-                <li routerLink="" class="nav-item mx-3 d-flex justify-content-center">
-                    <a class="nav-link text-black" aria-current="page">Home</a>
-                </li>
-                <li routerLink="/all-items" class="nav-item mx-3 d-flex justify-content-center">
-                    <a class="nav-link text-black">ALL Products</a>
-                </li>
-                <li routerLink="/cart" class="nav-item mx-3 d-flex justify-content-center">
-                    <a class="nav-link text-black">Cart</a>
-                </li>
-                <li class="nav-item mx-3 d-flex justify-content-center">
-                    <a class="nav-link text-black">Contact Us</a>
-                </li>
-                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showAvatar">
-                    <div class="avatar" (click)="showAvatarPopOver()">
-                        {{firstLetter}}
-                    </div>
-                </li>
-                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showSignInButtons">
-                    <button class="btn btn-primary" (click)="showSignIn()">Login</button>
-                </li>
-                <li class="nav-item mx-3 d-flex justify-content-center" *ngIf="showSignInButtons">
-                    <button class="btn btn-primary" (click)="showSignUp()">SignUp</button>
-                </li>
-            </ul>
+<div class="navBar">
+    <div class="d-xl-flex d-lg-flex d-md-none d-sm-none d-none"><img src="img/200.jpg" alt="" srcset="" width="30"
+            height="24" class="ms-5">
+    </div>
+    <button class="ms-3 btn btn-primary d-lg-none" (click)="btnNav()"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+    <div class="d-flex">
+        <ul class="me-5 text-white d-xl-flex d-lg-flex d-md-none d-sm-none d-none">
+            <li routerLink="" class="mt-3">Home</li>
+            <li routerLink="/all-items" class="mt-3 ">All Products</li>
+            <li routerLink="/cart" class="mt-3">Cart</li>
+            <li routerLink="/contact" class="mt-3">Contact</li>
+        </ul>
+        <div class="me-2 d-flex justify-content-center align-items-center" *ngIf="showSignInButtons">
+            <button class="btn btn-primary mx-3" (click)="showSignIn()">Login</button>
+            <button class="btn btn-primary mx-3" (click)="showSignUp()">SignUp</button>
+        </div>
+        <div>
+            <div class="avatar mt-2 mx-3" (click)="showAvatarPopOver()" *ngIf="showAvatar">
+                {{firstLetter}}
+            </div>
         </div>
     </div>
-</nav>
+</div>
+
+
+<div class="main-nav-model" *ngIf="navModel" data-aos="fade-right">
+    <div class="mb-2 d-flex justify-content-end">
+        <div></div>
+        <button type="button" class="btn-close bg-body-secondary" (click)="btnNav()"></button>
+    </div>
+    <div class="nav-model">
+        <div class="nav-Item mt-4" routerLink="" (click)="btnNav()">
+            Home
+        </div>
+        <div class="nav-Item" routerLink="/all-items" (click)="btnNav()">
+            All Products
+        </div>
+        <div class="nav-Item" routerLink="/cart" (click)="btnNav()">
+            Cart
+        </div>
+        <div class="nav-Item" routerLink="/contact" (click)="btnNav()">
+            Contact
+        </div>
+    </div>
+</div>
+
 
 <div class="modal" tabindex="-1" #signInModal>
     <div class="modal-dialog">
@@ -50,7 +58,7 @@
                         [(ngModel)]="signIn.email" />
                 </div>
                 <div class="form-outline mb-4 text-center">
-                    <input type="email" id="signIn_Password" class="form-control" placeholder="Password"
+                    <input type="password" id="signIn_Password" class="form-control" placeholder="Password"
                         [(ngModel)]="signIn.password" />
                 </div>
                 <div class="row mb-4">
@@ -62,7 +70,7 @@
                     </div>
 
                     <div class="col">
-                        <a href="#!" class="text-decoration-none" (click)="forgotPassword()">Forgot password?</a>
+                        <a class="text-decoration-none pe-5" (click)="clickModel()">Forgot password?</a>
                     </div>
                     <div class="form-outline mb-4 text-center">
                         <button type="button" class="btn btn-primary mt-4" (click)="btnSignIn()">Sign in</button>
@@ -79,15 +87,47 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Forgot Password</h5>
+                <h5 class="modal-title">Reset Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <label for="itemName" class="form-label">Enter E-mail :</label>
+                <input type="text" class="form-control" id="itemName" [(ngModel)]="forgotPasswordEmail">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+            <div class="d-flex justify-content-start ms-3 mb-2">
+                <button type="button" class="btn btn-primary w-25" (click)="otpBtn()">Send OTP</button>
+            </div>
+            <div class="ms-3 me-3 mb-2" *ngIf="otp">
+                <label for="itemName" class="form-label">Enter OTP :</label>
+                <input type="text" class="form-control" id="itemName" [(ngModel)]="authObject.otpNumber">
+            </div>
+            <div class="d-flex justify-content-start ms-3 mb-3" *ngIf="otp">
+                <button type="button" class="btn btn-primary w-25" (click)="nextBtn()">Next</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" #resetPassword>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ms-3 me-3 mb-2">
+                    <label for="itemName" class="form-label">New Password :</label>
+                    <input type="password" class="form-control" id="itemName" [(ngModel)]="newPassword">
+                </div>
+                <div class="ms-3 me-3 mb-2">
+                    <label for="itemName" class="form-label">Confirm Password :</label>
+                    <input type="password" class="form-control" id="itemName" [(ngModel)]="confirmPassword">
+                </div>
+                <div class="d-flex justify-content-start ms-3 mb-3">
+                    <button type="button" class="btn btn-primary w-25" (click)="resetBtn()">Next</button>
+                </div>
             </div>
         </div>
     </div>
@@ -152,7 +192,7 @@
 <span class="loader" #spinner></span>
 
 <div *ngIf="loading" class="loading-overlay">
-    
+
 </div>
 
 <div class="avatarPopOver" *ngIf="avatar_pop_over">
@@ -162,8 +202,20 @@
     <div class="items" (click)="goToDashboard()">
         Dashboard
     </div>
-    <div class="items">
+    <div class="items" (click)="signOut()">
         SignOut
     </div>
 </div>
 
+<div class="toast-container position-fixed top-0 end-50 p-3 z-3">
+    <div #deleteToast class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class={{toastImg}}></i>
+            <strong class="ms-2 me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body fw-semibold">
+            {{toastMsg}}
+        </div>
+    </div>
+</div>

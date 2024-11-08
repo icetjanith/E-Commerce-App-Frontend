@@ -1,28 +1,32 @@
 <div class="sidebar" (click)="clickOnMainContent()">
     <ul class="mt-3">
         <div class="sideBarItems">
-            <img src="img/dashboard_1828791.png" alt="" width="15%" class="me-3">
-            Dashboard
+            <img src="img/dashboard_1828791.png" alt="" class="me-3 mt-lg-0 mt-md-2">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Dashboard</div>
+        </div>
+        <div class="sideBarItems" (click)="goToProfile()">
+            <div class="me-3"><i class="fa fa-user fa-2x" aria-hidden="true"></i></div>
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Profile</div>
         </div>
         <div class="sideBarItems" (click)="btnAddItems()">
-            <img src="img/add.png" alt="" width="15%" class="me-3">
-            Add Item
+            <img src="img/add.png" alt=""  class="me-3">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Add Items</div>
         </div>
         <div class="sideBarItems" (click)="addSuppliersFunction()">
-            <img src="img/add-item.png" alt="" width="15%" class="me-3">
-            Add Supplier
+            <img src="img/add-item.png" alt=""  class="me-3">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Add Suppliers</div>
         </div>
         <div class="sideBarItems">
-            <img src="img/review.png" alt="" width="15%" class="me-3">
-            View Orders
+            <img src="img/review.png" alt="" class="me-3">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Dashboard</div>
         </div>
         <div class="sideBarItems">
-            <img src="img/database.png" alt="" width="15%" class="me-3">
-            Customers
+            <img src="img/database.png" alt="" class="me-3">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Orders</div>
         </div>
         <div class="sideBarItems">
-            <img src="img/parcel.png" alt="" width="15%" class="me-3">
-            Suppliers
+            <img src="img/parcel.png" alt="" class="me-3">
+            <div class="d-lg-flex d-md-none d-sm-none d-none">Dashboard</div>
         </div>
     </ul>
 </div>
@@ -30,29 +34,70 @@
 
     <div class="searchRow row d-flex justify-content-center mt-3 mb-3 ms-1">
         <div class="d-flex">
-            <input class="searchBox form-control me-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchText" (click)="clickOnSearchBox()">
+            <input class="searchBox form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                [(ngModel)]="searchText" (click)="clickOnSearchBox()">
             <button class="btn btn-outline-success" type="button" (click)="clickOnSearchBtn()">Search</button>
         </div>
     </div>
 
     <div class="searchPanel col-lg-4" *ngIf="searchBox">
         <div class="card shadow ms-3 p-2">
-            <div class="searchItem mb-1 ms-2" (click)="clickOnSearchResult('ddd')"><div class="me-1"><i class="fas fa-search"></i></div>BMV1526</div>
-            <div class="searchItem mb-1 ms-2"><div class="me-1"><i class="fas fa-search"></i></div>BMV1526</div>
+            <div class="searchItem mb-1 ms-2" (click)="clickOnSearchResult('ddd')">
+                <div class="me-1"><i class="fas fa-search"></i></div>BMV1526
+            </div>
+            <div class="searchItem mb-1 ms-2">
+                <div class="me-1"><i class="fas fa-search"></i></div>BMV1526
+            </div>
         </div>
     </div>
 
-    <div class="row ms-1">
-        <div class="col-lg-6">
-            <div class="card shadow">
+    <div class="row ms-1 me-1" *ngIf="detailsDiv">
+        <div class="col-xl-6 col-md-12 col-sm-12 col-12 mb-xl-0 mb-lg-0 mb-md-3 mb-sm-3">
+            <div class="card shadow h-100">
                 <div class="card-body">
-                    <img src="" alt="" srcset="" class="img-fluid">
+                    <img src={{item.itemImage}} alt="" srcset="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12 col-sm-12 col-12">
+            <div class="card shadow h-100">
+                <div class="card-body detailsDiv">
+                    <h3 class="guardianInfo">Item Information</h3>
+                    <hr>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Item-Code : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemCode}}</strong></label>
+                    </div>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Name : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemName}}</strong></label>
+                    </div>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Description : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemDescription}}</strong></label>
+                    </div>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Category : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemCategory}}</strong></label>
+                    </div>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Quantity : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemQuantity}}</strong></label>
+                    </div>
+                    <div class="detailsRow">
+                        <label for="studentName" class="label form-label"><strong>Price : </strong></label>
+                        <label for="studentName" class="label form-label"><strong>{{item.itemPrice}}</strong></label>
+                    </div>
+                    <div class="buttonRow">
+                        <button class="btnClear" id="btnUpdate" (click)="btnUpdate(item)">Update</button>
+                        <button class="btnRegister" id="btnDelete" (click)="btnDelete(item)">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-3 ms-1">
+    <div class="row mt-3 ms-1 me-1">
 
         <div class="col-xl-3 col-lg-03 col-md-6 col-sm-6 col-12 mb-4">
             <div class="card shadow border-start-0 py-2">

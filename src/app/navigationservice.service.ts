@@ -7,7 +7,8 @@ import { NavigationComponent } from './common/navigation/navigation.component';
 export class NavigationserviceService {
 
   constructor() { }
-
+  
+  public reload:boolean=false;
   public avatarImg:boolean=false;
   public customerId='';
 }

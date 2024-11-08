@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
@@ -46,14 +46,14 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     itemName:"",
     itemImage:"",
     itemDescription:"",
-    itemPrice:1,
-    itemQuantity:2,
+    itemPrice:0,
+    itemQuantity:0,
     itemCategory:"",
     itemCode:"",
     supplierId:""
   };
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private navigatonRoute:Router) {}
 
   ngAfterViewInit(): void {
     this.addSuppliers = new Modal(this.addSuppliersElement.nativeElement);
@@ -135,8 +135,8 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     itemName:"",
     itemImage:"",
     itemDescription:"",
-    itemPrice:1,
-    itemQuantity:2,
+    itemPrice:0,
+    itemQuantity:0,
     itemCategory:"",
     itemCode:"",
     supplierId:""
@@ -183,6 +183,7 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
         this.toastImg="fa-solid fa-circle-check";
         this.toastMsg='Item Deleted Successfully !';
         this.getItemDetails();
+        this.detailsDiv=false;
         this.deleteToastObject.show();
       }else{
         this.toastMsg=`Failed to delete item:${response.status} `;
@@ -209,12 +210,14 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     alert(this.searchText);
     this.searchItemByItemCode();
   }
-
+  detailsDiv:boolean=false;
   async searchItemByItemCode(){
     try {
       let response=await fetch(`http://localhost:8080/item/api/v1/item_code/${this.searchText}`);
       let data=await response.json();
       console.log(data);
+      this.item=data;
+      this.detailsDiv=true;
     } catch (error) {
       
     }finally{
@@ -224,5 +227,9 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
   
   clickOnSearchResult(searchresult:string){
     
+  }
+
+  goToProfile(){
+    this.navigatonRoute.navigate(['admin-profile/'+this.userId]);
   }
 }
