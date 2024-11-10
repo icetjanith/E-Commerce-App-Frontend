@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="searchPanel col-lg-4" *ngIf="searchBox">
+    <div class="searchPanel col-lg-4 d-none" *ngIf="searchBox">
         <div class="card shadow ms-3 p-2">
             <div class="searchItem mb-1 ms-2" (click)="clickOnSearchResult('ddd')">
                 <div class="me-1"><i class="fas fa-search"></i></div>BMV1526
@@ -254,6 +254,10 @@
                         <option value="asus">Asus</option>
                         <option value="msi">MSI</option>
                         <option value="hp">Hp</option>
+                        <option value="apple">Apple</option>
+                        <option value="dell">Dell</option>
+                        <option value="acer">Acer</option>
+                        <option value="lenovo">Lenovo</option>
                     </select>
                 </div>
                 <div class="mb-3">

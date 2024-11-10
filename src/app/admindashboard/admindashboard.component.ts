@@ -124,6 +124,7 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
 
       let data = await response.json();
       console.log(data);
+      this.itemsList=data;
     } catch (error) {
       console.error('Error submitting form:', error);
     }finally{
