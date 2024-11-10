@@ -28,9 +28,9 @@
     border: 1px solid black;
 }
 
-.chooseIconImg img :active{
-    border: 1px solid red;
-    cursor: pointer;
+.chooseIconImg img:hover{
+  border: 1px solid red !important;
+  opacity: 0.8;
 }
 
 .itemsHeader{

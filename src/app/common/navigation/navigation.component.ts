@@ -19,7 +19,7 @@ import { UserService } from '../../user/user.service';
 
 export class NavigationComponent implements AfterViewInit, OnInit {
 
-  constructor(private router: Router,private navigation:NavigationserviceService, private user_service:UserService) {}
+  constructor(private router: Router, private navigation: NavigationserviceService, private user_service: UserService) { }
 
   @ViewChild("signInModal") signInElement!: ElementRef;
   private signInModal!: Modal;
@@ -30,11 +30,11 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   @ViewChild("signUpModal") signUpElement!: ElementRef;
   private signUpModal!: Modal;
 
-  @ViewChild('deleteToast') deleteToast!:ElementRef;
-  private deleteToastObject!:Toast;
+  @ViewChild('deleteToast') deleteToast!: ElementRef;
+  private deleteToastObject!: Toast;
 
-  @ViewChild('resetPassword') resetPassword!:ElementRef;
-  private resetPasswordModal!:Modal;
+  @ViewChild('resetPassword') resetPassword!: ElementRef;
+  private resetPasswordModal!: Modal;
 
   @ViewChild("spinner") spinnerElement!: ElementRef;
 
@@ -47,24 +47,25 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     } else {
       console.error('deleteToast element is not available');
     }
-    this.forgotPasswordModal=new Modal(this.forgotPasswordElement.nativeElement);
-    this.resetPasswordModal=new Modal(this.resetPassword.nativeElement);
+    this.forgotPasswordModal = new Modal(this.forgotPasswordElement.nativeElement);
+    this.resetPasswordModal = new Modal(this.resetPassword.nativeElement);
   }
 
   ngOnInit(): void {
     this.checkUserLogin();
   }
 
-  loading = false;
+  loading: boolean = false;
   public showAvatar = false;
   showSignInButtons = true;
 
   public signUp: any = {
-    userId:"",
+    userId: "",
     fullName: "",
     email: "",
     password: "",
     userType: "",
+    adminId: "",
     phoneNumber: "",
     city: ""
   };
@@ -74,13 +75,13 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     password: ""
   };
 
-  toastImg!:string;
-  toastMsg!:string;
+  toastImg!: string;
+  toastMsg!: string;
 
-  checkUserLogin(){
+  checkUserLogin() {
     const savedLogin = localStorage.getItem('login');
-    if(savedLogin){
-      this.signIn=JSON.parse(savedLogin);
+    if (savedLogin) {
+      this.signIn = JSON.parse(savedLogin);
       this.loginCheck();
     }
   }
@@ -99,13 +100,13 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     this.forgotPasswordModal.show();
   }
 
-  firstLetter!:String;
+  firstLetter!: String;
 
   async btnSignUp() {
     console.log("signup");
     this.signUpModal.hide();
     this.loading = true;
-    this.spinnerElement.nativeElement.style.display = 'inline';
+    // this.spinnerElement.nativeElement.style.display = 'inline';
     try {
 
       let response = await fetch("http://localhost:8080/users/api/v1/save", {
@@ -115,35 +116,51 @@ export class NavigationComponent implements AfterViewInit, OnInit {
           "Content-Type": "application/json"
         }
       });
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.log(response);
+          console.log(response.statusText);
+          console.log(response.text);
+          this.toastImg = "fas fa-exclamation-triangle";
+          this.toastMsg = "Invalid Admin Id !";
+          this.deleteToastObject.show();
+          return;
+        }
 
+      }
       let data = await response.json();
 
       console.log(data);
-      this.signUp=data;
-      this.firstLetter=data.fullName.split("",1);
+      this.signUp = data;
+      this.firstLetter = data.fullName.split("", 1);
       console.log(this.firstLetter);
       this.showSignInButtons = false;
       this.showAvatar = true;
-      this.navigation.avatarImg=true;
-      this.navigation.customerId=data.userId;
-      this.signIn=data;
+      this.navigation.avatarImg = true;
+      this.navigation.customerId = data.userId;
+      this.signIn = data;
       console.log(this.signIn);
-      localStorage.setItem('login',JSON.stringify(this.signIn));
-      this.user_service.userObject=data;
-    } catch(error) {
+      localStorage.setItem('login', JSON.stringify(this.signIn));
+      this.user_service.userObject = data;
+      this.toastImg = "fa-solid fa-circle-check";
+      this.toastMsg = "Account created successfully !";
+      this.deleteToastObject.show();
+      return;
+    } catch (error) {
       console.log(error);
     } finally {
       this.loading = false;
-      this.spinnerElement.nativeElement.style.display = 'none';
+      // this.spinnerElement.nativeElement.style.display = 'none';
     }
 
   }
 
 
-  async loginCheck(){
+  async loginCheck() {
     console.log("signin");
     // this.signInModal.hide();
     this.loading = true;
+    console.log(this.loading)
     // this.spinnerElement.nativeElement.style.display = 'flex';
     try {
       let response = await fetch("http://localhost:8080/users/api/v1/sign-in", {
@@ -157,37 +174,37 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       let data = await response.json();
 
       console.log(data);
-      this.signUp=data;
-      this.firstLetter=data.fullName.split("",1);
+      this.signUp = data;
+      this.firstLetter = data.fullName.split("", 1);
       console.log(this.firstLetter)
       this.showSignInButtons = false;
       this.showAvatar = true;
-      this.navigation.avatarImg=true;
-      this.navigation.customerId=data.userId;
-      this.signIn=data;
+      this.navigation.avatarImg = true;
+      this.navigation.customerId = data.userId;
+      this.signIn = data;
       console.log(this.signIn);
-      localStorage.setItem('login',JSON.stringify(this.signIn));
-      this.user_service.userObject=data;
-    } catch(error) {
+      localStorage.setItem('login', JSON.stringify(this.signIn));
+      this.user_service.userObject = data;
+    } catch (error) {
       console.log(error);
     } finally {
       this.loading = false;
-      this.spinnerElement.nativeElement.style.display = 'none';
+      // this.spinnerElement.nativeElement.style.display = 'none';
     }
   }
 
-  signOut(){
+  signOut() {
     localStorage.removeItem('login');
-    this.showAvatar=false;
-    this.showSignInButtons=true;
-    this.avatar_pop_over=false;
+    this.showAvatar = false;
+    this.showSignInButtons = true;
+    this.avatar_pop_over = false;
   }
 
   async btnSignIn() {
     console.log("signin");
     this.signInModal.hide();
     this.loading = true;
-    this.spinnerElement.nativeElement.style.display = 'inline';
+    // this.spinnerElement.nativeElement.style.display = 'inline';
     try {
 
       let response = await fetch("http://localhost:8080/users/api/v1/sign-in", {
@@ -198,9 +215,9 @@ export class NavigationComponent implements AfterViewInit, OnInit {
         }
       });
 
-      if(!response.ok){
-        this.toastImg="fas fa-exclamation-triangle";
-        this.toastMsg="Your email or password incorrect !";
+      if (!response.ok) {
+        this.toastImg = "fas fa-exclamation-triangle";
+        this.toastMsg = "Your email or password incorrect !";
         this.deleteToastObject.show();
         return;
       }
@@ -208,22 +225,22 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       let data = await response.json();
 
       console.log(data);
-      this.signUp=data;
-      this.firstLetter=data.fullName.split("",1);
+      this.signUp = data;
+      this.firstLetter = data.fullName.split("", 1);
       console.log(this.firstLetter);
       this.showSignInButtons = false;
       this.showAvatar = true;
-      this.navigation.avatarImg=true;
-      this.navigation.customerId=data.userId;
-      this.signIn=data;
+      this.navigation.avatarImg = true;
+      this.navigation.customerId = data.userId;
+      this.signIn = data;
       console.log(this.signIn);
-      localStorage.setItem('login',JSON.stringify(this.signIn));
-      this.user_service.userObject=data;
-    } catch(error) {
+      localStorage.setItem('login', JSON.stringify(this.signIn));
+      this.user_service.userObject = data;
+    } catch (error) {
       console.log(error);
     } finally {
       this.loading = false;
-      this.spinnerElement.nativeElement.style.display = 'none';
+      // this.spinnerElement.nativeElement.style.display = 'none';
     }
 
   }
@@ -235,52 +252,52 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     console.log('Popover visibility:', this.avatar_pop_over ? 'Shown' : 'Hidden');
   }
 
-  goToDashboard(){
+  goToDashboard() {
     console.log('dash')
     const userId = this.signUp.userId;
-    if(this.signUp.userType==="admin"){
-      this.router.navigate(['/admin-dashboard',userId]);
-    }else if (this.signUp.userType === 'user') {
-      this.router.navigate(['/user-dashboard',userId]);
+    if (this.signUp.userType === "admin") {
+      this.router.navigate(['/admin-dashboard', userId]);
+    } else if (this.signUp.userType === 'user') {
+      this.router.navigate(['/user-dashboard', userId]);
     }
   }
 
-  otp:boolean=false;
+  otp: boolean = false;
 
-  forgotPasswordEmail!:string;
+  forgotPasswordEmail!: string;
 
-  otpNumber!:number;
+  otpNumber!: number;
 
-  async otpBtn(){
-    this.otp=true;
+  async otpBtn() {
+    this.otp = true;
     try {
-      let response=await fetch(`http://localhost:8080/users/api/v1/authenticate/${this.forgotPasswordEmail}`);
+      let response = await fetch(`http://localhost:8080/users/api/v1/authenticate/${this.forgotPasswordEmail}`);
     } catch (error) {
-      
+
     }
   }
 
-  authObject:any={
-    email:'',
-    otpNumber:''
+  authObject: any = {
+    email: '',
+    otpNumber: ''
   }
 
-  clickModel(){
+  clickModel() {
     this.signInModal.hide();
     this.forgotPasswordModal.show();
   }
 
-  async nextBtn(){
-    this.authObject.email=this.forgotPasswordEmail;
+  async nextBtn() {
+    this.authObject.email = this.forgotPasswordEmail;
     try {
-      let response=await fetch("http://localhost:8080/users/api/v1/otp",{
+      let response = await fetch("http://localhost:8080/users/api/v1/otp", {
         method: "POST",
         body: JSON.stringify(this.authObject),
         headers: {
           "Content-Type": "application/json"
-        }  
+        }
       });
-      if(response.ok){
+      if (response.ok) {
         this.forgotPasswordModal.hide();
         this.resetPasswordModal.show();
       }
@@ -289,45 +306,45 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     }
   }
 
-  public newPassword!:string;
-  public confirmPassword!:string;
+  public newPassword!: string;
+  public confirmPassword!: string;
 
-  resetObj:any={
-    email:"",
-    password:""
+  resetObj: any = {
+    email: "",
+    password: ""
   }
 
-  checkNewPassword(){
-    if(this.newPassword.match(this.confirmPassword)){
+  checkNewPassword() {
+    if (this.newPassword.match(this.confirmPassword)) {
       alert('ok');
-      this.resetObj.email=this.forgotPasswordEmail;
-      this.resetObj.password=this.newPassword;
-    }else{
+      this.resetObj.email = this.forgotPasswordEmail;
+      this.resetObj.password = this.newPassword;
+    } else {
       return;
     }
   }
 
-  async resetBtn(){
+  async resetBtn() {
     this.checkNewPassword();
     alert('working')
     try {
-      let response=await fetch("http://localhost:8080/users/api/v1/reset-password",{
-        method:"PUT",
+      let response = await fetch("http://localhost:8080/users/api/v1/reset-password", {
+        method: "PUT",
         body: JSON.stringify(this.resetObj),
         headers: {
           "Content-Type": "application/json"
-        }  
+        }
       });
 
     } catch (error) {
-      
+
     }
   }
 
-  navModel:boolean=false;
+  navModel: boolean = false;
 
-  btnNav(){
-    this.navModel=!this.navModel;
+  btnNav() {
+    this.navModel = !this.navModel;
   }
 
 
