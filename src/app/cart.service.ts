@@ -42,6 +42,20 @@ export class CartService{
     sessionStorage.setItem('cart',JSON.stringify(this.cart));
   }
 
+  public removeItem(cartItem:any){
+    const existingItem = this.cart.find(item=>item.itemCode===cartItem.itemCode);
+    if(existingItem){
+      if(existingItem.itemQuantity>0){
+        existingItem.itemQuantity-=1;
+        if(existingItem.itemQuantity===0){
+          this.cart.filter(item=>item.itemCode!==cartItem.itemCode);
+        }
+      }
+      
+    }
+    sessionStorage.setItem('cart',JSON.stringify(this.cart));
+  }
+
   public getCartItems(){
     return this.cart;
   }

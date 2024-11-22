@@ -1,19 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CartService } from '../../cart.service';
-import { NgFor, NgIf } from '@angular/common';
-import { NavigationComponent } from '../navigation/navigation.component';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { Toast } from 'bootstrap';
 import { NavigationserviceService } from '../../navigationservice.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, NgStyle],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, AfterViewInit {
 
-  constructor(private cartsService: CartService, private navigationService: NavigationserviceService) { }
+  constructor(private cartsService: CartService, private navigationService: NavigationserviceService) {}
+
+  ngAfterViewInit(): void {
+    this.toast=new Toast(this.toastDiv.nativeElement);
+  }
+
+  toastMsg!:string;
+  toastImg!:string;
+  toastStyle={
+    color: '#00ff1e',
+  };
 
   cart: any[] = [];
   orderDetailArray: any[] = []
@@ -21,6 +31,9 @@ export class CartComponent implements OnInit {
   emptyCartImg: boolean = true;
 
   totalValue: number = 0.00;
+
+  @ViewChild('liveToast') toastDiv!:ElementRef;
+  private toast!:Toast;
 
   ngOnInit(): void {
     this.cart = this.cartsService.getCartItems();
@@ -36,6 +49,7 @@ export class CartComponent implements OnInit {
   }
 
   setTotalValue() {
+    this.totalValue=0.00;
     if (this.cart.length !== 0) {
       this.cart.forEach(cartItem => {
         this.totalValue += cartItem.itemQuantity * cartItem.itemPrice;
@@ -74,7 +88,6 @@ export class CartComponent implements OnInit {
         }
       });
       let data=await response.json();
-      alert('ok')
     } catch (error) {
       console.log(error);
     }finally{
@@ -82,14 +95,38 @@ export class CartComponent implements OnInit {
     }
   }
 
+  btnAddItem(cartItem:any){
+    this.cartsService.addItemCart(cartItem);
+    this.cart = this.cartsService.getCartItems();
+    console.log(this.cart);
+    this.loadCartItems();
+    this.setTotalValue();
+  }
+
+  btnRemoveItem(cartItem:any){
+    this.cartsService.removeItem(cartItem);
+    this.cart = this.cartsService.getCartItems();
+    console.log(this.cart);
+    this.loadCartItems();
+    this.setTotalValue();
+  }
+
   btnCheckOut() {
     if (this.navigationService.avatarImg) {
-      alert('valid');
+      this.toastImg="fa-solid fa-circle-check";
+      this.toastMsg="Order Placed Successfully !";
+      this.toast.show();
       this.addOrderDteais();
       console.log(this.order);
       this.saveOrder();
     } else {
-      alert('not valid');
+      this.toastImg="fas fa-exclamation-triangle";
+      this.toastStyle={
+        color: '#ff0000',
+      }
+      // this.toastStyle="color: #ff0000;"
+      this.toastMsg="You Are Not Registered Customer !";
+      this.toast.show();
     }
   }
 

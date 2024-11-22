@@ -21,9 +21,14 @@
                         </div>
                         <div class="totalPrice">
                             Rs. {{cartItem.itemQuantity*cartItem.itemPrice}}
+                            
                         </div>
                         <div class="quantity">
+                            <div (click)="btnRemoveItem(cartItem)" class="me-3" style="cursor: pointer;"><i class="fa-solid fa-circle-minus"
+                                style="color: #ffffff;"></i></div>
                             {{cartItem.itemQuantity}}
+                            <div (click)="btnAddItem(cartItem)" class="ms-3" style="cursor: pointer;"><i class="fa-solid fa-circle-plus"
+                                style="color: #ffffff;"></i></div>
                         </div>
                     </div>
 
@@ -36,10 +41,26 @@
                 </div>
 
                 <div class="checkout_button" id="checkout_button">
-                    <button class="btn fw-bold" style="color: white; background-color: #007FFF;;" (click)="btnCheckOut()">Checkout</button>
+                    <button class="btn fw-bold" style="color: white; background-color: #007FFF;;"
+                        (click)="btnCheckOut()">Checkout</button>
                 </div>
 
             </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="toast-container">
+    <div #liveToast class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class={{toastImg}} [ngStyle]="toastStyle"></i>
+            <strong class="ms-2 me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body fw-semibold">
+            {{toastMsg}}
         </div>
     </div>
 </div>

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationComponent } from '../navigation/navigation.component';
 import { NgFor, NgIf } from '@angular/common';
 import { ProductItemsComponent } from '../product-items/product-items.component';
 
