@@ -75,6 +75,8 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     password: ""
   };
 
+  toastImgImg!:string;
+
   toastImg!: string;
   toastMsg!: string;
 
@@ -142,6 +144,7 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       console.log(this.signIn);
       localStorage.setItem('login', JSON.stringify(this.signIn));
       this.user_service.userObject = data;
+      this.toastImgImg="img/success.png";
       this.toastImg = "fa-solid fa-circle-check";
       this.toastMsg = "Account created successfully !";
       this.deleteToastObject.show();
@@ -216,6 +219,7 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       });
 
       if (!response.ok) {
+        this.toastImgImg="img/error.jpg";
         this.toastImg = "fas fa-exclamation-triangle";
         this.toastMsg = "Your email or password incorrect !";
         this.deleteToastObject.show();
@@ -297,6 +301,12 @@ export class NavigationComponent implements AfterViewInit, OnInit {
           "Content-Type": "application/json"
         }
       });
+      if(!response.ok){
+        this.toastImgImg="img/error.jpg";
+        this.toastImg = "fas fa-exclamation-triangle";
+        this.toastMsg = "Error : "+response.statusText;
+        this.deleteToastObject.show();
+      }
       if (response.ok) {
         this.forgotPasswordModal.hide();
         this.resetPasswordModal.show();
@@ -316,7 +326,7 @@ export class NavigationComponent implements AfterViewInit, OnInit {
 
   checkNewPassword() {
     if (this.newPassword.match(this.confirmPassword)) {
-      alert('ok');
+      // alert('ok');
       this.resetObj.email = this.forgotPasswordEmail;
       this.resetObj.password = this.newPassword;
     } else {
@@ -326,7 +336,7 @@ export class NavigationComponent implements AfterViewInit, OnInit {
 
   async resetBtn() {
     this.checkNewPassword();
-    alert('working')
+    // alert('working')
     try {
       let response = await fetch("http://localhost:8080/users/api/v1/reset-password", {
         method: "PUT",
@@ -335,6 +345,10 @@ export class NavigationComponent implements AfterViewInit, OnInit {
           "Content-Type": "application/json"
         }
       });
+      if(!response.ok){
+        return;
+      }
+      this.resetPasswordModal.hide();
 
     } catch (error) {
 

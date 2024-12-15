@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Modal } from 'bootstrap';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
-import {Toast} from 'bootstrap'
+import { Toast } from 'bootstrap'
 
 @Component({
   selector: 'app-admindashboard',
   standalone: true,
-  imports: [FormsModule,NgFor,NgIf],
+  imports: [FormsModule, NgFor, NgIf],
   templateUrl: './admindashboard.component.html',
   styleUrls: ['./admindashboard.component.css']  // Corrected to 'styleUrls'
 })
@@ -22,18 +22,18 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('addItems') addItemsElement!: ElementRef;
   private addItemsModal!: Modal;
 
-  @ViewChild('updateItem') updateItemElement!:ElementRef;
-  private updateItemModal!:Modal;
+  @ViewChild('updateItem') updateItemElement!: ElementRef;
+  private updateItemModal!: Modal;
 
-  @ViewChild('confirmDelete') confirmDelete!:ElementRef;
-  private confirmDeleteModal!:Modal;
+  @ViewChild('confirmDelete') confirmDelete!: ElementRef;
+  private confirmDeleteModal!: Modal;
 
-  @ViewChild('deleteToast') deleteToast!:ElementRef;
-  private deleteToastObject!:Toast;
+  @ViewChild('deleteToast') deleteToast!: ElementRef;
+  private deleteToastObject!: Toast;
 
-  toastMsg!:string;
-  toastImg!:string;
-  searchBox:boolean=false;
+  toastMsg!: string;
+  toastImg!: string;
+  searchBox: boolean = false;
 
   supplier = {
     supplierName: '',
@@ -42,18 +42,18 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     supplierCompany: ''
   };
 
-  item={
-    itemName:"",
-    itemImage:"",
-    itemDescription:"",
-    itemPrice:0,
-    itemQuantity:0,
-    itemCategory:"",
-    itemCode:"",
-    supplierId:""
+  item = {
+    itemName: "",
+    itemImage: "",
+    itemDescription: "",
+    itemPrice: 0,
+    itemQuantity: 0,
+    itemCategory: "",
+    itemCode: "",
+    supplierId: ""
   };
 
-  constructor(private route: ActivatedRoute, private navigatonRoute:Router) {}
+  constructor(private route: ActivatedRoute, private navigatonRoute: Router) { }
 
   ngAfterViewInit(): void {
     this.addSuppliers = new Modal(this.addSuppliersElement.nativeElement);
@@ -63,25 +63,25 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     this.deleteToastObject = new Toast(this.deleteToast.nativeElement);
   }
 
-  public itemsList:any = [];
+  public itemsList: any = [];
 
   ngOnInit(): void {
     this.userId = +this.route.snapshot.paramMap.get('userId')!;
     this.getItemDetails();
   }
 
-  loading:boolean=false;
-  async getItemDetails(){
-    this.loading=true;
+  loading: boolean = false;
+  async getItemDetails() {
+    this.loading = true;
     try {
       let response = await fetch("http://localhost:8080/item/api/v1/all");
       let data = await response.json();
-      this.itemsList=data;
+      this.itemsList = data;
       console.log(this.itemsList);
     } catch (error) {
-      
-    }finally{
-      this.loading=false;
+
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -111,7 +111,7 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async submitItemForm(){
+  async submitItemForm() {
     try {
       console.log(this.item);
       let response = await fetch('http://localhost:8080/item/api/v1/save', {
@@ -124,37 +124,40 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
 
       let data = await response.json();
       console.log(data);
-      this.itemsList=data;
+      this.itemsList = data;
+      this.toastImg = "fa-solid fa-circle-check";
+      this.toastMsg = 'Item Added Successfully !';
+      this.deleteToastObject.show();
     } catch (error) {
       console.error('Error submitting form:', error);
-    }finally{
+    } finally {
       this.addItemsModal.hide();
     }
   }
 
-  public newItem:any={
-    itemName:"",
-    itemImage:"",
-    itemDescription:"",
-    itemPrice:0,
-    itemQuantity:0,
-    itemCategory:"",
-    itemCode:"",
-    supplierId:""
+  public newItem: any = {
+    itemName: "",
+    itemImage: "",
+    itemDescription: "",
+    itemPrice: 0,
+    itemQuantity: 0,
+    itemCategory: "",
+    itemCode: "",
+    supplierId: ""
   };
 
-  btnUpdate(item:any){
-    this.newItem=item;
+  btnUpdate(item: any) {
+    this.newItem = item;
     this.updateItemModal.show();
   }
 
-  deleteId!:string;
-  btnDelete(item:any){
-    this.deleteId=item.itemCode;
+  deleteId!: string;
+  btnDelete(item: any) {
+    this.deleteId = item.itemCode;
     this.confirmDeleteModal.show();
   }
 
-  async btnUpdateItem(){
+  async btnUpdateItem() {
     try {
       console.log(this.item);
       let response = await fetch('http://localhost:8080/item/api/v1/update', {
@@ -167,70 +170,70 @@ export class AdmindashboardComponent implements OnInit, AfterViewInit {
 
       let data = await response.json();
       console.log(data);
-      this.itemsList=data;
+      this.itemsList = data;
     } catch (error) {
       console.error('Error submitting form:', error);
-    }finally{
+    } finally {
       this.updateItemModal.hide();
     }
   }
 
-  async btnDeleteItem(){
-    try{
-      let response=await fetch(`http://localhost:8080/item/api/v1/delete/${this.deleteId}`,{
-        method:"DELETE",
+  async btnDeleteItem() {
+    try {
+      let response = await fetch(`http://localhost:8080/item/api/v1/delete/${this.deleteId}`, {
+        method: "DELETE",
       });
-      if(response.ok){
-        this.toastImg="fa-solid fa-circle-check";
-        this.toastMsg='Item Deleted Successfully !';
+      if (response.ok) {
+        this.toastImg = "fa-solid fa-circle-check";
+        this.toastMsg = 'Item Deleted Successfully !';
         this.getItemDetails();
-        this.detailsDiv=false;
+        this.detailsDiv = false;
         this.deleteToastObject.show();
-      }else{
-        this.toastMsg=`Failed to delete item:${response.status} `;
+      } else {
+        this.toastMsg = `Failed to delete item:${response.status} `;
         this.deleteToastObject.show();
       }
-    }catch{
+    } catch {
 
-    }finally{
+    } finally {
       this.confirmDeleteModal.hide();
     }
   }
 
-  clickOnMainContent(){
-    this.searchBox=false;
+  clickOnMainContent() {
+    this.searchBox = false;
   }
 
-  clickOnSearchBox(){
-    this.searchBox=true;
+  clickOnSearchBox() {
+    this.searchBox = true;
   }
 
-  searchText:string="";
+  searchText: string = "";
 
-  clickOnSearchBtn(){
-    alert(this.searchText);
+  clickOnSearchBtn() {
+
     this.searchItemByItemCode();
   }
-  detailsDiv:boolean=false;
-  async searchItemByItemCode(){
+  detailsDiv: boolean = false;
+  async searchItemByItemCode() {
     try {
-      let response=await fetch(`http://localhost:8080/item/api/v1/item_code/${this.searchText}`);
-      let data=await response.json();
+      let response = await fetch(`http://localhost:8080/item/api/v1/item_code/${this.searchText}`);
+      let data = await response.json();
       console.log(data);
-      this.item=data;
-      this.detailsDiv=true;
+      this.item = data;
+      this.detailsDiv = true;
     } catch (error) {
-      
-    }finally{
-      this.searchBox=false;
+
+    } finally {
+      this.searchBox = false;
     }
   }
-  
-  clickOnSearchResult(searchresult:string){
-    
+
+  clickOnSearchResult(searchresult: string) {
+
   }
 
-  goToProfile(){
-    this.navigatonRoute.navigate(['admin-profile/'+this.userId]);
+  goToProfile() {
+    this.navigatonRoute.navigate(['admin-profile/' + this.userId]);
   }
 }
